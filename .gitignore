@@ -8,9 +8,7 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
 
-#忽略element-ui文件夹
-/src/main/webapp/element-ui/**
-/src/main/webapp/element-ui/*
+
 
 ######################################################################
 # IDE
@@ -53,5 +51,6 @@ nbdist/
 !*/build/*.xml
 
 
-
+#忽略element-ui文件夹
+/src/main/webapp/element-ui/*
 
