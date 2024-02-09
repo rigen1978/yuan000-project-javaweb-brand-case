@@ -20,4 +20,10 @@ public interface BrandService {
 	 */
 	List<Brand> selectAll();
 
+	/**
+	 * 添加数据
+	 * @param brand
+	 */
+	void add(Brand brand);
+
 }
