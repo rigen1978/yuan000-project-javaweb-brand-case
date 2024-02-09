@@ -53,7 +53,7 @@
             title="编辑品牌"
             :visible.sync="dialogVisible"
             width="30%"
-            >
+    >
 
         <el-form ref="form" :model="brand" label-width="80px">
             <el-form-item label="品牌名称">
@@ -160,10 +160,22 @@
 <script src="js/vue.js"></script>
 <script src="element-ui/lib/index.js"></script>
 <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+<!--1.引入axios-->
+<script src="js/axios-0.18.0.js"></script>
 
 <script>
     new Vue({
         el: "#app",
+        mounted() {
+            //2.当页面加载完成后，发送异步请求，获取数据
+            var _this = this
+            axios({
+                methods: "get",
+                url: "http://localhost:8080/brand-case/selectAllServlet"
+            }).then(function (resp) {
+                _this.tableData = resp.data
+            })
+        },
         methods: {
             tableRowClassName({row, rowIndex}) {
                 if (rowIndex === 1) {
@@ -184,7 +196,7 @@
                 console.log(this.brand);
             },
             // 添加数据
-            addBrand(){
+            addBrand() {
                 console.log(this.brand);
             },
 
@@ -209,34 +221,14 @@
                     status: '',
                     brandName: '',
                     companyName: '',
-                    id:"",
-                    ordered:"",
-                    description:""
+                    id: "",
+                    ordered: "",
+                    description: ""
                 },
                 // 复选框选中数据集合
                 multipleSelection: [],
                 // 表格数据
-                tableData: [{
-                    brandName: '华为',
-                    companyName: '华为科技有限公司',
-                    ordered: '100',
-                    status: "1"
-                }, {
-                    brandName: '华为',
-                    companyName: '华为科技有限公司',
-                    ordered: '100',
-                    status: "1"
-                }, {
-                    brandName: '华为',
-                    companyName: '华为科技有限公司',
-                    ordered: '100',
-                    status: "1"
-                }, {
-                    brandName: '华为',
-                    companyName: '华为科技有限公司',
-                    ordered: '100',
-                    status: "1"
-                }]
+                tableData: []
             }
         }
     })
