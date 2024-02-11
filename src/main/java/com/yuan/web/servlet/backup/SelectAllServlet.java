@@ -1,4 +1,4 @@
-package com.yuan.web.servlet;
+package com.yuan.web.servlet.backup;
 /**
  * @className: Servlet
  * @package: com.yuan.web.servlet
@@ -18,27 +18,24 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.List;
 
-@WebServlet("/addServlet")
-public class AddServlet extends HttpServlet {
+@WebServlet("/selectAllServlet")
+public class SelectAllServlet extends HttpServlet {
 	private BrandService brandService = new BrandServiceImpl();
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 1.接受数据
-		BufferedReader br = request.getReader();
-		String params = br.readLine();
+		// 1.调用service查询
+		List<Brand> brands = brandService.selectAll();
 
-		// 2.转为brand对象
-		Brand brand = JSON.parseObject(params, Brand.class);
+		// 2.将集合装为json数据
+		String jsonString = JSON.toJSONString(brands);
 
-		// 3.调用serice进行添加
-		brandService.add(brand);
-
-		// 4.响应成功标识
-		response.getWriter().write("success");
+		// 3.写数据
+		response.setContentType("text/json;charset=utf-8");
+		response.getWriter().write(jsonString);
 	}
 
 	@Override

@@ -53,4 +53,36 @@ public class BrandServiceImpl implements BrandService {
 		// 5.释放资源
 		sqlSession.close();
 	}
+
+	@Override
+	public void updateById(Brand brand) {
+		// 2.获取SqlSession对象
+		SqlSession sqlSession = factory.openSession();
+
+		// 3.获取mapper对象
+		BrandMapper brandMapper = sqlSession.getMapper(BrandMapper.class);
+
+		// 4.调用方法
+		brandMapper.updateById(brand);
+		sqlSession.commit();
+
+		// 5.释放资源
+		sqlSession.close();
+	}
+
+	@Override
+	public void deleteById(int id) {
+		// 2.获取SqlSession对象
+		SqlSession sqlSession = factory.openSession();
+
+		// 3.获取mapper对象
+		BrandMapper brandMapper = sqlSession.getMapper(BrandMapper.class);
+
+		// 4.调用方法
+		brandMapper.deleteById(id);
+		sqlSession.commit();
+
+		// 5.释放资源
+		sqlSession.close();
+	}
 }
