@@ -39,4 +39,10 @@ public interface BrandService {
 	 */
 	void deleteById(int id);
 
+	/**
+	 * 批量删除
+	 * @param ids
+	 */
+	void deleteByIds(int[] ids);
+
 }

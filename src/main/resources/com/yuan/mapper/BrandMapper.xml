@@ -12,4 +12,16 @@
 		<result column="company_name"
 		        property="companyName"></result>
 	</resultMap>
+
+	<!--批量删除-->
+	<delete id="deleteByIds">
+		delete from tb_brand_cn where id in
+		<foreach collection="ids"
+		         item="id"
+		         separator=","
+		         open="("
+		         close=")">
+			#{id}
+		</foreach>
+	</delete>
 </mapper>
