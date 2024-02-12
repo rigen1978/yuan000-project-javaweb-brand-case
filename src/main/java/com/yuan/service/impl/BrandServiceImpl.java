@@ -2,6 +2,7 @@ package com.yuan.service.impl;
 
 import com.yuan.mapper.BrandMapper;
 import com.yuan.pojo.Brand;
+import com.yuan.pojo.PageBean;
 import com.yuan.service.BrandService;
 import com.yuan.util.SqlSessionFactoryUtils;
 import org.apache.ibatis.session.SqlSession;
@@ -100,5 +101,40 @@ public class BrandServiceImpl implements BrandService {
 
 		//5. 释放资源
 		sqlSession.close();
+	}
+
+	/**
+	 * 分页功能
+	 * @param currentPage 当前页码
+	 * @param pageSize    每页展示条数
+	 * @return
+	 */
+	@Override
+	public PageBean<Brand> selectByPage(int currentPage, int pageSize) {
+		//2. 获取SqlSession对象
+		SqlSession sqlSession = factory.openSession();
+		//3. 获取BrandMapper
+		BrandMapper mapper = sqlSession.getMapper(BrandMapper.class);
+
+		//4. 计算开始索引
+		int begin = (currentPage - 1) * pageSize;
+		// 计算查询条目数
+		int size = pageSize;
+
+		//5. 查询当前页数据
+		List<Brand> rows = mapper.selectByPage(begin, size);
+
+		//6. 查询总记录数
+		int totalCount = mapper.selectTotalCount();
+
+		//7. 封装PageBean对象
+		PageBean<Brand> pageBean = new PageBean<>();
+		pageBean.setRows(rows);
+		pageBean.setTotalCount(totalCount);
+
+		//8. 释放资源
+		sqlSession.close();
+
+		return pageBean;
 	}
 }

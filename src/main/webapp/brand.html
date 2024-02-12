@@ -102,8 +102,10 @@
                     type="selection"
                     width="55">
             </el-table-column>
+            <!--:index="index" 表格分页后设置序号连续-->
             <el-table-column
                     type="index"
+                    :index="index"
                     width="50">
             </el-table-column>
 
@@ -153,7 +155,7 @@
             :page-sizes="[5, 10, 15, 20]"
             :page-size="5"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="400">
+            :total="totalCount">
     </el-pagination>
 
 </div>
@@ -172,6 +174,10 @@
             this.selectAll()
         },
         methods: {
+            <!--表格分页后设置序号分页连续-->
+            index(index) {
+                return (index + 1) + (this.currentPage - 1) * this.pageSize
+            },
             // 批量删除
             deleteByIds() {
                 // 弹出确认提示框
@@ -301,12 +307,30 @@
             selectAll() {
                 //2.当页面加载完成后，发送异步请求，获取数据
                 var _this = this
+                // ------------------------ 1 查询所有 str--------------------------------------
+                // axios({
+                //     methods: "get",
+                //     url: "http://localhost:8080/brand-case/brand/selectAll"
+                // }).then(function (resp) {
+                //     _this.tableData = resp.data
+                // })
+                // ------------------------ 1 查询所有 end--------------------------------------
+
+                // ------------------------ 2 分页查询 str--------------------------------------
                 axios({
-                    methods: "get",
-                    url: "http://localhost:8080/brand-case/brand/selectAll"
+                    method: "get",
+                    url: "http://localhost:8080/brand-case/brand/selectByPage?currentPage=" + _this.currentPage + "&pageSize=" + _this.pageSize,
+                    data: _this.brand
                 }).then(function (resp) {
-                    _this.tableData = resp.data
+
+                    //设置表格数据
+                    _this.tableData = resp.data.rows; // {rows:[],totalCount:100}
+                    //设置总记录数
+                    _this.totalCount = resp.data.totalCount;
                 })
+                // ------------------------ 2 分页查询 end--------------------------------------
+
+
             },
             // 复选框选中后执行的方法
             handleSelectionChange(val) {
@@ -346,15 +370,25 @@
 
             //分页
             handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
+                //console.log(`每页 ${val} 条`);
+                //设置每页的条数
+                this.pageSize = val
+                this.selectAll()
             },
             handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
+                //获取当前页码，第几页
+                //console.log(`当前页: ${val}`);
+                this.currentPage = val
+                this.selectAll()
             }
 
         },
         data() {
             return {
+                //每页展示条数
+                pageSize: 5,
+                //分页总记录数
+                totalCount: 0,
                 // 被选中的id数组
                 selectedIds: [],
                 //跳转地址
@@ -366,7 +400,7 @@
                 //弹框标题
                 titleName: '',
                 // 当前页码
-                currentPage: 4,
+                currentPage: 1,
                 // 添加数据对话框是否展示的标记
                 dialogVisible: false,
 

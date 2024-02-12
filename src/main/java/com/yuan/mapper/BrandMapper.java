@@ -40,4 +40,24 @@ public interface BrandMapper {
 	 * @param ids
 	 */
 	void deleteByIds(@Param("ids") int[] ids);
+
+	//-----------------------分页功能 Start--------------------------
+
+	/**
+	 * 分页查询
+	 * @param begin
+	 * @param size
+	 * @return
+	 */
+	@Select("select * from tb_brand_cn limit #{begin},#{size}")
+	@ResultMap("brandResultMap")
+	List<Brand> selectByPage(@Param("begin") int begin, @Param("size") int size);
+
+	/**
+	 * 查询总记录数
+	 * @return
+	 */
+	@Select("select count(*) from tb_brand_cn")
+	int selectTotalCount();
+	//-----------------------分页功能 End--------------------------
 }
