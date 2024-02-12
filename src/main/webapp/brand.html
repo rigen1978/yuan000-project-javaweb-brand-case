@@ -18,21 +18,22 @@
 <div id="app">
 
     <!--搜索表单-->
-    <el-form :inline="true" :model="brand" class="demo-form-inline">
+    <el-form :inline="true" :model="seachBrand" class="demo-form-inline">
 
         <el-form-item label="当前状态">
-            <el-select v-model="brand.status" placeholder="当前状态">
+            <el-select v-model="seachBrand.status" placeholder="当前状态">
+                <el-option label="" value=""></el-option>
                 <el-option label="启用" value="1"></el-option>
                 <el-option label="禁用" value="0"></el-option>
             </el-select>
         </el-form-item>
 
         <el-form-item label="企业名称">
-            <el-input v-model="brand.companyName" placeholder="企业名称"></el-input>
+            <el-input v-model="seachBrand.companyName" placeholder="企业名称"></el-input>
         </el-form-item>
 
         <el-form-item label="品牌名称">
-            <el-input v-model="brand.brandName" placeholder="品牌名称"></el-input>
+            <el-input v-model="seachBrand.brandName" placeholder="品牌名称"></el-input>
         </el-form-item>
 
         <el-form-item>
@@ -317,18 +318,32 @@
                 // ------------------------ 1 查询所有 end--------------------------------------
 
                 // ------------------------ 2 分页查询 str--------------------------------------
-                axios({
-                    method: "get",
-                    url: "http://localhost:8080/brand-case/brand/selectByPage?currentPage=" + _this.currentPage + "&pageSize=" + _this.pageSize,
-                    data: _this.brand
-                }).then(function (resp) {
-
-                    //设置表格数据
-                    _this.tableData = resp.data.rows; // {rows:[],totalCount:100}
-                    //设置总记录数
-                    _this.totalCount = resp.data.totalCount;
-                })
+                // axios({
+                //     method: "get",
+                //     url: "http://localhost:8080/brand-case/brand/selectByPage?currentPage=" + _this.currentPage + "&pageSize=" + _this.pageSize,
+                //     data: _this.brand
+                // }).then(function (resp) {
+                //
+                //     //设置表格数据
+                //     _this.tableData = resp.data.rows; // {rows:[],totalCount:100}
+                //     //设置总记录数
+                //     _this.totalCount = resp.data.totalCount;
+                // })
                 // ------------------------ 2 分页查询 end--------------------------------------
+
+                // ------------------------ ３ 模糊查询连带分页查询 str--------------------------------------
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/brand-case/brand/selectByPageAndCondition?currentPage=" + this.currentPage + "&pageSize=" + this.pageSize,
+                    data: this.seachBrand
+                }).then(resp => {
+                    //设置表格数据
+                    this.tableData = resp.data.rows; // {rows:[],totalCount:100}
+                    //设置总记录数
+                    this.totalCount = resp.data.totalCount;
+                })
+
+                // ------------------------ ３ 模糊查询连带分页查询 end--------------------------------------
 
 
             },
@@ -340,7 +355,9 @@
             },
             // 查询方法
             onSubmit() {
-                console.log(this.brand);
+                //console.log(this.brand);
+                this.currentPage = 1
+                this.selectAll();
             },
             // 添加数据
             addBrand() {
@@ -403,7 +420,12 @@
                 currentPage: 1,
                 // 添加数据对话框是否展示的标记
                 dialogVisible: false,
-
+                // 品牌模型数据
+                seachBrand: {
+                    status: '',
+                    brandName: '',
+                    companyName: ''
+                },
                 // 品牌模型数据
                 brand: {
                     status: '',
